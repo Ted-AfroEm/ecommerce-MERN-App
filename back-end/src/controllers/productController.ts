@@ -60,7 +60,43 @@ const storeProduct = async (req: any, res: any) => {
   }
 };
 const showProduct = async (req: any, res: any) => {};
-const removeProduct = async (req: any, res: any) => {};
-const showAllProducts = async (req: any, res: any) => {};
+
+const removeProduct = async (req: any, res: any) => {
+  try {
+    const { id } = req.params;
+    const deleteProduct = await productModel.findByIdAndDelete(id);
+    if (!deleteProduct) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Product removed successfully",
+      data: deleteProduct,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message:
+        error instanceof Error ? error.message : "An unknown error occured",
+    });
+  }
+};
+
+const showAllProducts = async (req: any, res: any) => {
+  try {
+    const products = await productModel.find({});
+    res.json({ success: true, products });
+  } catch (error) {
+    res.json({
+      success: false,
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+};
 
 export { storeProduct, showProduct, removeProduct, showAllProducts };

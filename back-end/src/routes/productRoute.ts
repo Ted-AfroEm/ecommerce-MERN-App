@@ -20,7 +20,7 @@ productRouter.post(
   storeProduct
 );
 productRouter.get("/", showAllProducts);
-productRouter.delete("/", removeProduct);
+productRouter.delete("/:id", removeProduct);
 productRouter.get("/:id", showProduct);
 
 export default productRouter;
