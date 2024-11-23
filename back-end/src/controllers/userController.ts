@@ -82,6 +82,36 @@ const registerUser = async (req: any, res: any) => {
   }
 };
 
-const adminLogin = async () => {};
+const adminLogin = async (req: any, res: any) => {
+  try {
+    console.log("I am here");
+    const { email, password } = req.body;
 
+    if (
+      !process.env.ADMIN_EMAIL ||
+      !process.env.ADMIN_PASSWORD ||
+      !process.env.JWT_SECRET
+    ) {
+      throw new Error(
+        "Server misconfiguration. Please set all required environment variables."
+      );
+    }
+
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      const token = jwt.sign(email + password, process.env.JWT_SECRET);
+      res.json({ success: true, token });
+    } else {
+      res.json({ success: false, message: "Invalid credentials" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+};
 export { loginUser, registerUser, adminLogin };
